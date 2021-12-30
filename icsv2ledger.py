@@ -906,7 +906,7 @@ def main(options):
         else:
             #if options.clear_screen:
             #    print('\033[2J\033[;H')
-            #print('\n' + entry.prompt())
+            print('\n' + entry.prompt())
             value = prompt_for_value('Payee', possible_payees, payee)
             if value:
                 modified = modified if modified else value != payee
@@ -987,13 +987,15 @@ def main(options):
             # detect duplicate entries in the ledger file and optionally skip or prompt user for action
             # if options.skip_dupes and csv_lines[i].strip() in csv_comments:
             if (options.skip_older_than < 0) or (entry.days_old <= options.skip_older_than):
+                printed=False
                 if options.clear_screen:
                     print('\033[2J\033[;H')
-                print('\n' + entry.prompt())
                 if (options.skip_dupes or options.confirm_dupes) and entry.md5sum in md5sum_hashes:
                     value = 'Y'
                     # if interactive flag was passed prompt user before skipping transaction
                     if options.confirm_dupes:
+                        print('\n' + entry.prompt())
+                        printed=True
                         yn_response = prompt_for_value('Duplicate transaction detected, skip?', possible_yesno, 'Y')
                         if yn_response:
                             value = yn_response
